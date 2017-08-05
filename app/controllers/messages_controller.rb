@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :edit, :update, :destroy]
   
   def index
-    @messages = Message.all
+    @messages = Message.order(created_at: :desc).page(params[:page]).per(10)
   end
   
   def show
@@ -16,8 +16,8 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     
     if @message.save
-      flash[:sucess] = 'Messageが正常に投稿されました'
-      redirect_to @message
+      flash[:success] = 'Messageが正常に投稿されました'
+      redirect_to root_path
     else
       flash.now[:danger] = 'Messageが投稿されませんでした'
       render :new
@@ -51,7 +51,7 @@ class MessagesController < ApplicationController
   end
   
   def set_message
-    @message = message.find(params[:id])
+    @message = Message.find(params[:id])
   end
   
 end
